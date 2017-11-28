@@ -7,7 +7,12 @@
 #define CMD_ARG_FORMAT 0
 #define CMD_ARG_OUT 1
 
-typedef enum {} status_t ;
+typedef enum {
+ERROR_PROG_INVOCATION,
+ERROR_INVALID_FORMAT,
+ERROR_INVALID_OUT,
+ERROR_INVALID_FORMAT_SELECTION,
+} status_t ;
 
 char * arg_flag[MAX_ARG_FLAG]={"-fmt","-out"}; /*son dos...no se si vale la pena hacer un arreglo */
 char * format_types[MAX_FORMAT_TYPES]={"csv","kml"};
@@ -40,7 +45,7 @@ status_t validate_arguments(int argc,char * argv){
  
  FILE * archivo_salida;
  
- 	if((fopen(archivo_entrada,"rt"))==NULL) /*es de texto delimitado por comas nomas*/
+ 	if((fopen(argv[5],"rt"))==NULL) /*como es lo de abrir el archivo de entrada????!!!!!!!!!!!*/
 		return ERROR_NULL_FILE;
 	fopen(archivo_salida,"wt");/*no necesita validar porque lo crea?*/
 	
