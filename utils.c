@@ -72,12 +72,19 @@ status_t split (const char * str, char *** sp)
 	return OK;
 }
 
-status_t csv_printer (const ADT_Vector_t * data, char * delim, FILE * fo)
+status_t csv_printer (const ADT_Vector_t * data, char * delim, FILE * fo,int det, size_t size)
 {	
 	if (data == NULL || delim == NULL || fo == NULL)
 		return ERROR_NULL_POINTER;
+
 	
-	fprintf (fo, "%s%c", data);
+		if(size==det){
+		delim='\n';
+		}
+	
+	fprintf (fo, "%s%c", data,delim);
+	return OK;
+}
 
 	
 	
