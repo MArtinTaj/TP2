@@ -1,52 +1,93 @@
-# TP2
+
+	
+/*main.c*/
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "data.h"
+#include "types.h"
+#include "main.h"
 
-#define MAX_ARGUMENTS 1  /*van en types.h */
-#define CMD_ARG_FORMAT 0
-#define CMD_ARG_OUT 1
+int main (int argc, char *argv[])
+{
+	status_t st;
+	setup_t setup;
+	
+	if (validate_arguments (argc, argv, &setup) != OK)
+		return st;
+	
+	return OK;
+}
 
-typedef enum {
-ERROR_PROG_INVOCATION,
-ERROR_INVALID_FORMAT,
-ERROR_INVALID_OUT,
-ERROR_INVALID_FORMAT_SELECTION,
-} status_t ;
+status_t validate_arguments (int argc, char *argv[], file_t * file)
+{
+	size_t i,j,variable_to_export;
+	status_t st;
+	ADT_Vector_t * v;
+	char ** split_str;
+	printer_t pf;
+	
+	if (argv == NULL || file == NULL)
+		return ERROR_NULL_POINTER;
+	
+	i = 0;/*inicializar al ppio o en la variable, nunca suelto*/
+	
 
-char * arg_flag[MAX_ARG_FLAG]={"-fmt","-out"}; /*son dos...no se si vale la pena hacer un arreglo */
-char * format_types[MAX_FORMAT_TYPES]={"csv","kml"};
-/*./gpsviewer –fmt <formato> -out <salida> <entrada>*/
-  
-  
-status_t validate_arguments(int argc,char * argv){
+		/*separar una cosa de cada otra*/
 
-  if(argc!=MAX_ARGUMENTS){
-		return ERROR_PROG_INVOCATION;
+	if (!strcmp (argv[i], CMD_ARG_FMT))
+	{
+			return ERROR_PROG_INVOCATION;
 	}
-  if(!strcmp(argv[CMD_ARG_FORMAT],arg_flag[CMD_ARG_FORMAT])){
-		return ERROR_INVALID_FORMAT;
+	
+/*hacer un arreglo de los formatos, nos mandan 10 tipos de casos y nos llenamos de if*/
+
+char * export_formats[MAX_ARR]={FMT_CSV,FMT_KML}
+	
+	for(j=0;j<MAX_ARR;j++)
+	{
+
+		if (!strcmp (argv[i+1], export_format[j]))/*si la i=0, es esto, usar macro #define CMD_ARG_FORMAT 1*/
+		{
+			variable_to_export=j; /*esta nos va a decir que tipo d formato es*/
+			break;/*buscar nombre mas representativo.... no se me ocurrio ninguno*/
+		}
 	}
-  if(!strcmp(argv[CMD_ARG_OUT],arg_flag[CMD_ARG_OUT])){
-		return ERROR_INVALID_OUT;
+	if(j==MAX_ARR)
+	{
+		return ERROR_INVALID_FORMAT;/* si es MAX_ARR significa que no era uno de los que teniamos, por eso el break , ademas como guardamos la variable en tal lado desp nos sirve para imprimir, si es csv o kml con un swith*/
 	}
-  
-  if((strcmp(argv[CMD_ARG_FORMAT+1],format_types[0]))!=0||(strcmp(argv[CMD_ARG_FORMAT+1],format_types[1]))!=0){
-    return ERROR_INVALID_FORMAT_SELECTION;
-    }
-  /* es este caso no podemos validar contra algo el archivo de entrada y salida*/
-  
-  return OK;
-  }
-  
-  status_t entrada(FILE * archivo_entrada){
-  
- /* $GPGGA,002153.000,3342.6618,N,11751.3858,W,1,10,1.2,27.0,M,-34.2,M,,0000*5E*/
- 
- FILE * archivo_salida;
- 
- 	if((fopen(argv[5],"rt"))==NULL) /*como es lo de abrir el archivo de entrada????!!!!!!!!!!!*/
-		return ERROR_NULL_FILE;
-	fopen(archivo_salida,"wt");/*no necesita validar porque lo crea?*/
+
+	if (!strcmp (argv[i], CMD_ARG_OUT))
+	{
+		if ((file->fi = fopen (INPUT_FILE_DIR, "rt")) == NULL)
+			return ERROR_INPUT_FILE;
+		
+		st = get_gga_data (&split_str, file->fi);
+		if (fclose (file->fi) == EOF)
+			return ERROR_DISK_SPACE;
+		if (st != OK)	
+			return st;
+		if ((st = ADT_Vector_new (&v)) != OK)
+			return st;
+		if ((st = parse_gga_data (&split_str, &v)) != OK)
+			return st;
+			valor=ADT_Vector_get_size (const ADT_Vector_t * v);/*conseguir el largo del vector, para hacer un for de tal e ir imprimiendo, preguntar a santi lo que dijo pablo(imprimir los 3 de una, hacer funcion switch que cambie de lugar para csv, o guardar en arreglo esos valores y punto*/
+
+		switch(variable_to_export)
+		{
+			case OPC_CSV:/*macro*/
+					pf=&printer
+
+			case OPC_KML:/*macro*/
+					ADT_Vector_get_size (const ADT_Vector_t * v)
+					pf=printer (v,delim, size_t element_count, INPUT_FILE_DIR)
+
+
+		
+		
+		
+	/*terminar validacion de -out*/
 	
 	
+
